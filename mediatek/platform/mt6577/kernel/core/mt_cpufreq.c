@@ -171,7 +171,7 @@ static bool mtk_cpufreq_debug = false;
 static bool mtk_cpufreq_ready = false;
 static bool mtk_cpufreq_pause = false;
 
-static bool cpufreq_usb_limit = true;
+static bool cpufreq_usb_limit = false;
 
 /*****************************************
 * Turbo mode threshold
@@ -551,13 +551,9 @@ static int mtk_cpufreq_keep_max_freq(unsigned int freq_old, unsigned int freq_ne
 {
     if (cpufreq_usb_limit)
     {
-        //                                                                                                
-        #if 0
         /* if usb connected, keep maximum frequency */
         if ((DRV_Reg32(UPLL_CON0) & 0x1) == 0)
-            return 1;
-        #endif
-        //                                                                                                
+            return 1;                                                                                              
     }
 
     if (mtk_cpufreq_pause)
@@ -702,10 +698,10 @@ static int mtk_cpufreq_target(struct cpufreq_policy *policy, unsigned int target
         freqs.new = policy->max;
     }
 
-    if (g_is_sreen_off)
-    {
-        freqs.new = DVFS_F2;
-    }
+//    if (g_is_sreen_off)
+//    {
+//        freqs.new = DVFS_F2;
+//    }
 
     if (freqs.new > g_limited_freq)
     {
@@ -917,8 +913,8 @@ void mtk_cpufreq_early_suspend(struct early_suspend *h)
     if (get_chip_ver() >= CHIP_6575_E2 && get_chip_ver() < CHIP_6577_E1)
         g_limited_min_freq = DVFS_F7;
 
-    cpufreq_state_set(0);
-    cpufreq_driver_target(policy, DVFS_F2, CPUFREQ_RELATION_L);
+    //cpufreq_state_set(0);
+    //cpufreq_driver_target(policy, DVFS_F2, CPUFREQ_RELATION_L);
 
     mt6329_read_byte(0x47, &g_dvs_volt);
 
@@ -948,7 +944,7 @@ void mtk_cpufreq_late_resume(struct early_suspend *h)
     if (get_chip_ver() >= CHIP_6575_E2 && get_chip_ver() < CHIP_6577_E1)
         g_limited_min_freq = DVFS_F8;
 
-    cpufreq_state_set(1);
+    //cpufreq_state_set(1);
 
     #endif
 

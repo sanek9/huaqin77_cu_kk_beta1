@@ -418,7 +418,7 @@ inline static int Register_MT9P017AF_CharDrv(void)
         return -EAGAIN;
     }
 
-    actuator_class = class_create(THIS_MODULE, "actuatordrv0");
+    actuator_class = class_create(THIS_MODULE, "actuatordrv0"); // actuatordrv --> actuatordrv0
     if (IS_ERR(actuator_class)) {
         int ret = PTR_ERR(actuator_class);
         MT9P017AFDB("Unable to create class, err = %d\n", ret);
@@ -604,7 +604,7 @@ static struct platform_driver g_stMT9P017AF_Driver = {
     .suspend	= MT9P017AF_suspend,
     .resume	= MT9P017AF_resume,
     .driver		= {
-        .name	= "lens_actuator0",
+        .name	= "lens_actuator0", // lens_actuator --> lens_actuator0
         .owner	= THIS_MODULE,
     }
 };

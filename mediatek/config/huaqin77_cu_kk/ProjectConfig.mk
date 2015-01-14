@@ -22,7 +22,7 @@ CUSTOM_HAL_EEPROM=m24c08f_eeprom
 
 CUSTOM_HAL_FLASHLIGHT = constant_flashlight
 CUSTOM_HAL_IMGSENSOR = mt9p017_mipi_raw s5k4e1ga_mipi_raw gc0329_yuv hi704_yuv
-CUSTOM_HAL_LENS = fm50af dummy_lens
+CUSTOM_HAL_LENS = fm50af mt9p017af dummy_lens
 CUSTOM_HAL_MAIN_IMGSENSOR = mt9p017_mipi_raw s5k4e1ga_mipi_raw
 CUSTOM_HAL_MSENSORLIB = mmc328x akm8975 ami304 yamaha530 mag3110 akmd8963
 CUSTOM_HAL_SENSORS = sensor
@@ -43,7 +43,7 @@ CUSTOM_KERNEL_IMGSENSOR = mt9p017_mipi_raw s5k4e1ga_mipi_raw gc0329_yuv hi704_yu
 CUSTOM_KERNEL_KPD = kpd
 CUSTOM_KERNEL_LCM = nt35516_dsi_3P2463
 CUSTOM_KERNEL_LEDS = mt65xx
-CUSTOM_KERNEL_LENS = fm50af dummy_lens
+CUSTOM_KERNEL_LENS = fm50af mt9p017af dummy_lens
 CUSTOM_KERNEL_MAGNETOMETER = akm8975
 CUSTOM_KERNEL_MAIN_IMGSENSOR = mt9p017_mipi_raw s5k4e1ga_mipi_raw
 CUSTOM_KERNEL_RTC = rtc

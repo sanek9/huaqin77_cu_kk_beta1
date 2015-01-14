@@ -1,3 +1,38 @@
+/* Copyright Statement:
+ *
+ * This software/firmware and related documentation ("MediaTek Software") are
+ * protected under relevant copyright laws. The information contained herein
+ * is confidential and proprietary to MediaTek Inc. and/or its licensors.
+ * Without the prior written permission of MediaTek inc. and/or its licensors,
+ * any reproduction, modification, use or disclosure of MediaTek Software,
+ * and information contained herein, in whole or in part, shall be strictly prohibited.
+ */
+/* MediaTek Inc. (C) 2010. All rights reserved.
+ *
+ * BY OPENING THIS FILE, RECEIVER HEREBY UNEQUIVOCALLY ACKNOWLEDGES AND AGREES
+ * THAT THE SOFTWARE/FIRMWARE AND ITS DOCUMENTATIONS ("MEDIATEK SOFTWARE")
+ * RECEIVED FROM MEDIATEK AND/OR ITS REPRESENTATIVES ARE PROVIDED TO RECEIVER ON
+ * AN "AS-IS" BASIS ONLY. MEDIATEK EXPRESSLY DISCLAIMS ANY AND ALL WARRANTIES,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NONINFRINGEMENT.
+ * NEITHER DOES MEDIATEK PROVIDE ANY WARRANTY WHATSOEVER WITH RESPECT TO THE
+ * SOFTWARE OF ANY THIRD PARTY WHICH MAY BE USED BY, INCORPORATED IN, OR
+ * SUPPLIED WITH THE MEDIATEK SOFTWARE, AND RECEIVER AGREES TO LOOK ONLY TO SUCH
+ * THIRD PARTY FOR ANY WARRANTY CLAIM RELATING THERETO. RECEIVER EXPRESSLY ACKNOWLEDGES
+ * THAT IT IS RECEIVER'S SOLE RESPONSIBILITY TO OBTAIN FROM ANY THIRD PARTY ALL PROPER LICENSES
+ * CONTAINED IN MEDIATEK SOFTWARE. MEDIATEK SHALL ALSO NOT BE RESPONSIBLE FOR ANY MEDIATEK
+ * SOFTWARE RELEASES MADE TO RECEIVER'S SPECIFICATION OR TO CONFORM TO A PARTICULAR
+ * STANDARD OR OPEN FORUM. RECEIVER'S SOLE AND EXCLUSIVE REMEDY AND MEDIATEK'S ENTIRE AND
+ * CUMULATIVE LIABILITY WITH RESPECT TO THE MEDIATEK SOFTWARE RELEASED HEREUNDER WILL BE,
+ * AT MEDIATEK'S OPTION, TO REVISE OR REPLACE THE MEDIATEK SOFTWARE AT ISSUE,
+ * OR REFUND ANY SOFTWARE LICENSE FEES OR SERVICE CHARGE PAID BY RECEIVER TO
+ * MEDIATEK FOR SUCH MEDIATEK SOFTWARE AT ISSUE.
+ *
+ * The following software/firmware and/or related documentation ("MediaTek Software")
+ * have been modified by MediaTek Inc. All revisions are subject to any receiver's
+ * applicable license agreements with MediaTek Inc.
+ */
+
 /*
  * MD218A voice coil motor driver
  *
@@ -20,8 +55,8 @@
 //#include <mach/mt6573_gpio.h>
 
 
-#define MT9P017AF_DRVNAME "MT9P017AF"
-#define MT9P017AF_VCM_WRITE_ID           0x18
+#define MT9P017AF_DRVNAME "MT9P017AF" //MT9P017AF
+#define MT9P017AF_VCM_WRITE_ID           0xFF //add by zym 2012-03-15 0x18 -> 0xFF
 
 #define MT9P017AF_DEBUG
 #ifdef MT9P017AF_DEBUG
@@ -34,6 +69,7 @@ static spinlock_t g_MT9P017AF_SpinLock;
 /* Kirby: remove old-style driver
 static unsigned short g_pu2Normal_MT9P017AF_i2c[] = {MT9P017AF_VCM_WRITE_ID , I2C_CLIENT_END};
 static unsigned short g_u2Ignore_MT9P017AF = I2C_CLIENT_END;
+
 static struct i2c_client_address_data g_stMT9P017AF_Addr_data = {
     .normal_i2c = g_pu2Normal_MT9P017AF_i2c,
     .probe = &g_u2Ignore_MT9P017AF,
@@ -54,13 +90,13 @@ static unsigned long g_u4MT9P017AF_INF = 0;
 static unsigned long g_u4MT9P017AF_MACRO = 1023;
 static unsigned long g_u4TargetPosition = 0;
 static unsigned long g_u4CurrPosition   = 0;
-//static struct work_struct g_stWork;     // --- Work queue ---
+static struct work_struct g_stWork;     // --- Work queue ---
 //static XGPT_CONFIG	g_GPTconfig;		// --- Interrupt Config ---
 
 
-extern s32 mt_set_gpio_mode(u32 u4Pin, u32 u4Mode);
-extern s32 mt_set_gpio_out(u32 u4Pin, u32 u4PinOut);
-extern s32 mt_set_gpio_dir(u32 u4Pin, u32 u4Dir);
+//extern s32 mt_set_gpio_mode(u32 u4Pin, u32 u4Mode);
+//extern s32 mt_set_gpio_out(u32 u4Pin, u32 u4PinOut);
+//extern s32 mt_set_gpio_dir(u32 u4Pin, u32 u4Dir);
 
 extern void MT9P017MIPI_write_cmos_sensor(kal_uint32 addr, kal_uint32 para);
 extern kal_uint16 MT9P017MIPI_read_cmos_sensor(kal_uint32 addr);
@@ -70,7 +106,9 @@ static int s4MT9P017AF_ReadReg(unsigned short * a_pu2Result)
 {
     /*int  i4RetValue = 0;
     char pBuff[2];
+
     i4RetValue = i2c_master_recv(g_pstMT9P017AF_I2Cclient, pBuff , 2);
+
     if (i4RetValue < 0) 
     {
         MT9P017AFDB("[MT9P017AF] I2C read failed!! \n");
@@ -85,7 +123,9 @@ static int s4MT9P017AF_ReadReg(unsigned short * a_pu2Result)
 static int s4MT9P017AF_WriteReg(u16 a_u2Data)
 {
    /* int  i4RetValue = 0;
+
     char puSendCmd[2] = {(char)(a_u2Data >> 4) , (char)((a_u2Data & 0xF) << 4)};
+
 	//mt_set_gpio_out(97,1);
     i4RetValue = i2c_master_send(g_pstMT9P017AF_I2Cclient, puSendCmd, 2);
 	//mt_set_gpio_out(97,0);
@@ -259,15 +299,16 @@ unsigned long a_u4Param)
 
     return i4RetValue;
 }
-/*
 static void MT9P017AF_WORK(struct work_struct *work)
 {
     g_i4Position += (25 * g_i4Dir);
+
     if ((g_i4Dir == 1) && (g_i4Position >= (long)g_u4TargetPosition))
 	{
         g_i4Position = (long)g_u4TargetPosition;
         g_i4MotorStatus = 0;
     }
+
     if ((g_i4Dir == -1) && (g_i4Position <= (long)g_u4TargetPosition))
     {
         g_i4Position = (long)g_u4TargetPosition;
@@ -284,6 +325,7 @@ static void MT9P017AF_WORK(struct work_struct *work)
         g_i4MotorStatus = -1;
     }
 }
+
 static void MT9P017AF_ISR(UINT16 a_input)
 {
 	if (g_i4MotorStatus == 1)
@@ -291,7 +333,6 @@ static void MT9P017AF_ISR(UINT16 a_input)
 		schedule_work(&g_stWork);		
 	}
 }
-*/
 //Main jobs:
 // 1.check for device-specified errors, device not ready.
 // 2.Initialize the device if it is opened for the first time.
@@ -300,6 +341,7 @@ static void MT9P017AF_ISR(UINT16 a_input)
 //CAM_RESET
 static int MT9P017AF_Open(struct inode * a_pstInode, struct file * a_pstFile)
 {
+	MT9P017MIPI_write_cmos_sensor(0x30f0,0x8000);
     spin_lock(&g_MT9P017AF_SpinLock);
 
     if(g_s4MT9P017AF_Opened)
@@ -354,7 +396,7 @@ static int MT9P017AF_Release(struct inode * a_pstInode, struct file * a_pstFile)
 		{
 			msleep(1);
 			cnt++;
-			if (cnt>1000)	{break;}
+			if (cnt>200)	{break;}
 		}
 		
     	spin_lock(&g_MT9P017AF_SpinLock);
@@ -363,7 +405,7 @@ static int MT9P017AF_Release(struct inode * a_pstInode, struct file * a_pstFile)
 
     	spin_unlock(&g_MT9P017AF_SpinLock);
 
-    	//hwPowerDown(CAMERA_POWER_VCAM_A,"kd_camera_hw");
+    //	hwPowerDown(CAMERA_POWER_VCAM_A,"kd_camera_hw");
 
 		//XGPT_Stop(g_GPTconfig.num);
 	}
@@ -418,7 +460,7 @@ inline static int Register_MT9P017AF_CharDrv(void)
         return -EAGAIN;
     }
 
-    actuator_class = class_create(THIS_MODULE, "actuatordrv0"); // actuatordrv --> actuatordrv0
+    actuator_class = class_create(THIS_MODULE, "actuatordrv0");//add by zym 2012-03-15 actuatordrv -> actuatordrv0
     if (IS_ERR(actuator_class)) {
         int ret = PTR_ERR(actuator_class);
         MT9P017AFDB("Unable to create class, err = %d\n", ret);
@@ -460,20 +502,20 @@ static struct i2c_driver MT9P017AF_i2c_driver = {
 };*/
 
 /* Kirby: add new-style driver { */
-static int MT9P017AF_i2c_detect(struct i2c_client *client, int kind, struct i2c_board_info *info);
+//static int MT9P017AF_i2c_detect(struct i2c_client *client, int kind, struct i2c_board_info *info);
 static int MT9P017AF_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id);
 static int MT9P017AF_i2c_remove(struct i2c_client *client);
 static const struct i2c_device_id MT9P017AF_i2c_id[] = {{MT9P017AF_DRVNAME,0},{}};   
-static unsigned short force[] = {IMG_SENSOR_I2C_GROUP_ID, MT9P017AF_VCM_WRITE_ID, I2C_CLIENT_END, I2C_CLIENT_END};   
-static const unsigned short * const forces[] = { force, NULL };              
-static struct i2c_client_address_data addr_data = { .forces = forces,}; 
+//static unsigned short force[] = {IMG_SENSOR_I2C_GROUP_ID, MT9P017AF_VCM_WRITE_ID, I2C_CLIENT_END, I2C_CLIENT_END};   
+//static const unsigned short * const forces[] = { force, NULL };              
+//static struct i2c_client_address_data addr_data = { .forces = forces,}; 
 struct i2c_driver MT9P017AF_i2c_driver = {                       
     .probe = MT9P017AF_i2c_probe,                                   
     .remove = MT9P017AF_i2c_remove,                           
-    .detect = MT9P017AF_i2c_detect,                           
+//    .detect = MT9P017AF_i2c_detect,                           
     .driver.name = MT9P017AF_DRVNAME,                 
     .id_table = MT9P017AF_i2c_id,                             
-    .address_data = &addr_data,                        
+//    .address_data = &addr_data,                        
 };  
 
 static int MT9P017AF_i2c_detect(struct i2c_client *client, int kind, struct i2c_board_info *info) {         
@@ -504,15 +546,19 @@ static int MT9P017AF_i2c_probe(struct i2c_client *client, const struct i2c_devic
         MT9P017AFDB("[MT9P017AF] I2C port cannot support the format \n");
         return -EPERM;
     }
+
     if (!(g_pstMT9P017AF_I2Cclient = kzalloc(sizeof(struct i2c_client), GFP_KERNEL)))
     {
         return -ENOMEM;
     }
+
     g_pstMT9P017AF_I2Cclient->addr = a_i4Address;
     g_pstMT9P017AF_I2Cclient->adapter = a_pstAdapter;
     g_pstMT9P017AF_I2Cclient->driver = &MT9P017AF_i2c_driver;
     g_pstMT9P017AF_I2Cclient->flags = 0;
+
     strncpy(g_pstMT9P017AF_I2Cclient->name, MT9P017AF_DRVNAME, I2C_NAME_SIZE);
+
     if(i2c_attach_client(g_pstMT9P017AF_I2Cclient))
     {
         kfree(g_pstMT9P017AF_I2Cclient);
@@ -545,16 +591,22 @@ static int MT9P017AF_i2c_probe(struct i2c_client *client, const struct i2c_devic
 /* Kirby: remove old-style driver
 static int MT9P017AF_i2c_attach(struct i2c_adapter * a_pstAdapter)
 {
+
     if(a_pstAdapter->id == 0)
     {
     	 return i2c_probe(a_pstAdapter, &g_stMT9P017AF_Addr_data ,  MT9P017AF_i2c_foundproc);
     }
+
     return -1;
+
 }
+
 static int MT9P017AF_i2c_detach_client(struct i2c_client * a_pstClient)
 {
     int i4RetValue = 0;
+
     Unregister_MT9P017AF_CharDrv();
+
     //detach client
     i4RetValue = i2c_detach_client(a_pstClient);
     if(i4RetValue)
@@ -562,13 +614,16 @@ static int MT9P017AF_i2c_detach_client(struct i2c_client * a_pstClient)
         dev_err(&a_pstClient->dev, "Client deregistration failed, client not detached.\n");
         return i4RetValue;
     }
+
     kfree(i2c_get_clientdata(a_pstClient));
+
     return 0;
 }*/
 
 static int MT9P017AF_probe(struct platform_device *pdev)
 {
-    return i2c_add_driver(&MT9P017AF_i2c_driver);
+    //return i2c_add_driver(&MT9P017AF_i2c_driver);
+    return Register_MT9P017AF_CharDrv();
 }
 
 static int MT9P017AF_remove(struct platform_device *pdev)
@@ -604,17 +659,19 @@ static struct platform_driver g_stMT9P017AF_Driver = {
     .suspend	= MT9P017AF_suspend,
     .resume	= MT9P017AF_resume,
     .driver		= {
-        .name	= "lens_actuator0", // lens_actuator --> lens_actuator0
+        .name	= "lens_actuator0",//add by zym 2012-03-15 lens_actuator -> lens_actuator0
         .owner	= THIS_MODULE,
     }
 };
 
 static int __init MT9P017AF_i2C_init(void)
 {
+    MT9P017AFDB("Try to register MT9P017AF driver\n");
     if(platform_driver_register(&g_stMT9P017AF_Driver)){
         MT9P017AFDB("failed to register MT9P017AF driver\n");
         return -ENODEV;
     }
+    MT9P017AFDB("Succ to register MT9P017AF driver\n");
 
     return 0;
 }
@@ -630,4 +687,5 @@ module_exit(MT9P017AF_i2C_exit);
 MODULE_DESCRIPTION("MT9P017AF lens module driver");
 MODULE_AUTHOR("Gipi Lin <Gipi.Lin@Mediatek.com>");
 MODULE_LICENSE("GPL");
+
 

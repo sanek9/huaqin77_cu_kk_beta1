@@ -525,6 +525,7 @@ int mt_brightness_set_pmic_duty_store(u32 level, u32 div)
 {
 	return -1;
 }
+static bool  first_set_pwm = false; //
 int mt_mt65xx_led_set_cust(struct cust_mt65xx_led *cust, int level)
 {
 	struct nled_setting led_tmp_setting = {0,0,0};
@@ -542,6 +543,10 @@ int mt_mt65xx_led_set_cust(struct cust_mt65xx_led *cust, int level)
 			case MT65XX_LED_MODE_PWM:
 				if(strcmp(cust->name,"lcd-backlight") == 0)
 				{
+					if(!first_set_pwm) {					//
+						mt_set_gpio_mode(GPIO68, GPIO_MODE_01);		//
+						first_set_pwm = true;				//
+					}
 					bl_brightness_hal = level;
 					if(level == 0)
 					{

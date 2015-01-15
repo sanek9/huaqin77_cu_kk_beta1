@@ -1,9 +1,8 @@
 #include "accdet_custom_def.h"
 #include <accdet_custom.h>
-
 //key press customization: long press time
 struct headset_key_custom headset_key_custom_setting = {
-	2000
+	1000
 };
 
 struct headset_key_custom* get_headset_key_custom_setting(void)
@@ -19,7 +18,8 @@ static struct headset_mode_settings cust_headset_settings = {
 //headset mode register settings(for MT6575)
 static struct headset_mode_settings cust_headset_settings = {
 //	0x1900, 0x140, 1, 0x12c, 0x3000, 0x3000, 0x400
-0x900, 0x140, 1, 0x12c, 0x3000, 0x3000, 0x400
+//0x900, 0x140, 1, 0x12c, 0x3000, 0x3000, 0x400
+0x900, 0x140, 1, 0x1, 0x400, 0x400, 0x20
 };
 #endif
 #ifdef TV_OUT_SUPPORT

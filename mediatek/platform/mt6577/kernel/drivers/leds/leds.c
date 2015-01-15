@@ -171,7 +171,8 @@ int mt_led_set_pwm(int pwm_num, struct nled_setting* led)
 			break;
             
 		case NLED_ON :
-			pwm_setting.duty = 30;
+			//pwm_setting.duty = 30;
+			pwm_setting.duty = led->level; //kaka_12_0112
 			pwm_setting.clk_div = CLK_DIV1;			
 			pwm_setting.duration = 100;
 			break;
@@ -571,6 +572,7 @@ int mt_mt65xx_led_set_cust(struct cust_mt65xx_led *cust, int level)
 					}else
 					{
 						led_tmp_setting.nled_mode = NLED_ON;
+						led_tmp_setting.level = level*100/255; //kaka_12_0112
 					}
 					mt_led_set_pwm(cust->data,&led_tmp_setting);
 				}
@@ -667,11 +669,13 @@ int  mt_mt65xx_blink_set(struct led_classdev *led_cdev,
 				} else {
 					wake_lock(&leds_suspend_lock);
 				}
-			}			
+			}	
+/*		
 			else if (!got_wake_lock) {
 				wake_lock(&leds_suspend_lock);
 				got_wake_lock = 1;
 			}
+*/
 		}
 		else if (!led_data->delay_on && !led_data->delay_off) { // disable blink
 			if(led_data->cust.mode == MT65XX_LED_MODE_PWM)
@@ -690,10 +694,12 @@ int  mt_mt65xx_blink_set(struct led_classdev *led_cdev,
 					wake_unlock(&leds_suspend_lock);
 				}
 			}
+/*
 			else if (got_wake_lock) {
 				wake_unlock(&leds_suspend_lock);
 				got_wake_lock = 0;
 			}
+*/
 		}
 		return -1;
 	}

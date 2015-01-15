@@ -16,6 +16,7 @@ struct nled_setting
 	u8 nled_mode; //0, off; 1, on; 2, blink;
 	u32 blink_on_time ;
 	u32 blink_off_time;
+	u8 level;//kaka_12_0112
 };
 /* defined in <mach/mt_pmic_feature_api.h>
 typedef enum{  

@@ -1159,16 +1159,32 @@ static inline void check_cable_type(void)
                     break;
                 }
 #else
+		if(call_status==0){
+		        //kaka_12_0116 add
+		        current_headset_key = KEY_PLAYPAUSE;
+		        ACCDET_DEBUG("[Accdet]remote button %d pressed\n", current_headset_key);
+		        //notify_sendKeyEvent(ACC_END_CALL);
 
-                //kaka_12_0116 add
-                current_headset_key = KEY_PLAYPAUSE;
-                ACCDET_DEBUG("[Accdet]remote button %d pressed\n", current_headset_key);
-                //notify_sendKeyEvent(ACC_END_CALL);
-
-                input_report_key(kpd_accdet_dev, current_headset_key, 1);
-                input_sync(kpd_accdet_dev);
-                //kaka_12_0116 end
-
+		        input_report_key(kpd_accdet_dev, current_headset_key, 1);
+		        input_sync(kpd_accdet_dev);
+		        //kaka_12_0116 end
+		}else{
+			
+			if(is_long_press())
+		        {
+		            ACCDET_DEBUG("[Accdet]long press remote button to end call!\n");
+		            input_report_key(kpd_accdet_dev, KEY_ENDCALL, 1);
+		            input_report_key(kpd_accdet_dev, KEY_ENDCALL, 0);
+		            input_sync(kpd_accdet_dev);
+		        }
+		        else
+		        {
+		            ACCDET_DEBUG("[Accdet]short press remote button to accept call!\n");
+		            input_report_key(kpd_accdet_dev, KEY_CALL, 1);
+		            input_report_key(kpd_accdet_dev, KEY_CALL, 0);
+		            input_sync(kpd_accdet_dev);
+		        }
+		}
 
 
 #endif////end  ifdef ACCDET_MULTI_KEY_FEATURE else
